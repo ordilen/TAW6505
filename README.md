@@ -1,17 +1,16 @@
-# Philips TAW6505 / TWA6505 — Reverse Engineering Notes
+# Philips TAW6505 / TWA6505 / TAW6205 — Reverse Engineering Notes
 
-If your wireless speaker does not run anymore, there is a good chance, that it's firmware got
-corrupted. It's exactly what happened to mine. Unfortunately, you cannot download and flash
-official firmare, because it's encrypted. So that's why I provide you with following findings, that
-will hopefully allow you to fix your speaker. Please be cautious and be advised, that chip flashing
-and soldering skills may be required. Fortunately to all of us, the password is static and same
-for all devices.
+If your wireless speaker does not run anymore, there is a good chance, that its firmware got
+corrupted. It's exactly what happened to mine. Unfortunately, you cannot download and flash official firmare, because it's encrypted. And if the main system of the speaker is not working, it is not
+enabling USB port on the back and cannot decrypt and update firmware delivered on USB stick.
+
+So that's why I provide you with following findings, that will hopefully allow you to fix your speaker. Please be cautious and be advised, that chip flashing and soldering skills may be required, although you can flash it from UBOOT using UART connecton (I don't remember which one was working: ymodem, zmodem, kermit or something else - but after some fiddling and loooong time it worked). Fortunately to all of us, the firmware password is static and same for all devices (not sure if this applies to TAW6205).
 
 In the first part you will get firmware password and commands to extract firmware binary partitions.
 
 In the second I will show you how to get root shell on the device. It's easy do get to the UBOOT
 bootloader, but as soon as you start linux kernel the device goes silent. With some settings in the
-UBOOT you can however get linux shell. Unfortunately, I was not able to make the telnet service
+UBOOT you can however get linux shell as root. Unfortunately, I was not able to make the telnet service
 persistent across reboots, because the data on the main partition are not saved to the flash
 chip. If you find a way to make telnet (or SSH) persistent, let me know.
 
@@ -19,7 +18,7 @@ I do not take any responsibility for your actions. Take care everybody.
 
 
 **Device**: Philips TAW6505 wireless speaker  
-**Platform**: Caprica5 / ALi M3921 (ARMv7 dual-core Cortex-A9)  
+**Platform**: Phorus Caprica5 / ALi M3921 (ARMv7 dual-core Cortex-A9)  
 **Flash**: Macronix NAND 528 MB  
 **Firmware version**: 506.2.0.035  
 
@@ -94,8 +93,6 @@ openssl enc -bf-cbc -d -md md5 \
 
 `gc4a5` contains:
 ```
-drwxr-xr-x 2 kali kali     4096 Mar  5 14:56 .
-drwxr-xr-x 3 kali kali     4096 Mar  5 14:56 ..
 -rwxr-xr-x 1 kali kali   271974 Mar  5 14:56 Caprica5_app_upd
 -rwxr-xr-x 1 kali kali     7682 Mar  5 14:56 CommonFunctions.sh
 -rwxr-xr-x 1 kali kali      169 Mar  5 14:56 Credential.sh
@@ -123,7 +120,6 @@ drwxr-xr-x 3 kali kali     4096 Mar  5 14:56 ..
 -rwxr-xr-x  1 kali kali     7059 Mar  5 14:56 PhorusCaprica5UICommon.sh
 -rwxr-xr-x  1 kali kali    16745 Mar  5 14:56 PhorusCaprica5UpdateCommon.sh
 -rw-r--r--  1 kali kali 27555724 Mar  5 14:56 recovery.ubo
-drwxrwxr-x 73 kali kali    28672 Mar  6 20:54 _recovery.ubo.extracted
 -rw-r--r--  1 kali kali  3959952 Mar  5 14:56 see.ubo
 -rwxr-xr-x  1 kali kali   397024 Mar  5 14:56 update_fail.wav
 -rw-r--r--  1 kali kali      713 Mar  5 14:56 update.manifest
